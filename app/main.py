@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from .db import pool
-from .routers import subway_stations
+from .routers import datasets
 
 
 @asynccontextmanager
@@ -19,13 +19,13 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="NYC Subway Stations API",
-    description="API de solo lectura sobre la tabla nyc_subway_stations (PostGIS).",
+    title="NYC Spatial Data API",
+    description="API de solo lectura sobre la base NYC (PostGIS): estaciones de metro, homicidios, barrios, calles y bloques censales.",
     version="1.0.0",
     lifespan=lifespan,
 )
 
-app.include_router(subway_stations.router)
+app.include_router(datasets.router)
 
 
 @app.get("/health", tags=["health"])

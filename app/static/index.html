@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Explorador de estaciones del metro de Nueva York con filtros, búsqueda por zona y mapa interactivo." />
-  <title>NYC Subway Explorer</title>
+  <meta name="description" content="Explorador de datos espaciales de Nueva York: metro, homicidios, barrios, calles y bloques censales, con filtros, búsqueda por zona y mapa interactivo." />
+  <title>NYC Spatial Explorer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
@@ -17,8 +17,8 @@
     <div class="brand">
       <span class="brand-badge" aria-hidden="true">M</span>
       <div class="brand-text">
-        <h1>NYC Subway Explorer</h1>
-        <p>Estaciones del metro de Nueva York</p>
+        <h1>NYC Spatial Explorer</h1>
+        <p>Datos espaciales de Nueva York</p>
       </div>
     </div>
     <nav class="topbar-links">
@@ -28,45 +28,20 @@
 
   <div class="layout">
     <aside class="sidebar">
+      <nav id="dataset-tabs" class="tabs" role="tablist" aria-label="Conjunto de datos"></nav>
+      <p id="dataset-description" class="hint"></p>
+
       <form id="filters" class="card" autocomplete="off">
         <div class="card-title">
           <h2>Filtros</h2>
           <button type="button" id="clear-all" class="link-btn">Limpiar todo</button>
         </div>
 
-        <label class="field">
-          <span>Nombre de la estación</span>
-          <input type="search" name="name" placeholder="Ej. Times Sq, Grand Central…" />
-        </label>
-
-        <label class="field">
-          <span>Distrito</span>
-          <select name="borough">
-            <option value="">Todos los distritos</option>
-            <option>Manhattan</option>
-            <option>The Bronx</option>
-            <option>Brooklyn</option>
-            <option>Staten Island</option>
-            <option>Queens</option>
-          </select>
-        </label>
-
-        <div class="field">
-          <span id="lines-label">Línea</span>
-          <input type="hidden" name="route" />
-          <div id="line-picker" class="line-picker" role="group" aria-labelledby="lines-label"></div>
-        </div>
-
-        <fieldset class="field segmented">
-          <legend>Servicio express</legend>
-          <label><input type="radio" name="express" value="" checked /><span>Todos</span></label>
-          <label><input type="radio" name="express" value="true" /><span>Express</span></label>
-          <label><input type="radio" name="express" value="false" /><span>Local</span></label>
-        </fieldset>
+        <div id="dynamic-filters" class="dynamic-filters"></div>
 
         <details class="nearby">
           <summary>Búsqueda por cercanía</summary>
-          <p class="hint">También puedes dibujar un polígono, rectángulo o círculo en el mapa para filtrar por zona.</p>
+          <p class="hint">También puedes dibujar un polígono, rectángulo o círculo en el mapa para filtrar por zona. La figura se mantiene al cambiar de conjunto de datos.</p>
           <div class="grid-3">
             <label class="field"><span>Latitud</span><input type="number" name="lat" step="any" min="-90" max="90" /></label>
             <label class="field"><span>Longitud</span><input type="number" name="lon" step="any" min="-180" max="180" /></label>
@@ -75,7 +50,7 @@
           <button type="button" id="use-location" class="btn btn-secondary">Usar mi ubicación</button>
         </details>
 
-        <button type="submit" class="btn btn-primary">Buscar estaciones</button>
+        <button type="submit" class="btn btn-primary">Buscar</button>
       </form>
 
       <section class="results" aria-labelledby="results-title">
@@ -87,25 +62,20 @@
         <ul id="results" class="station-list"></ul>
 
         <div class="pager">
-          <button id="prev" type="button" class="btn btn-secondary" aria-label="Página anterior">&larr;</button>
+          <button id="prev" type="button" class="btn btn-secondary" aria-label="Página anterior">Anterior</button>
           <div class="pager-info">
             <span id="page-info">–</span>
             <label class="per-page">
               <span>Por página</span>
-              <select name="limit" form="filters">
-                <option>25</option>
-                <option selected>50</option>
-                <option>100</option>
-                <option>500</option>
-              </select>
+              <select id="per-page" name="limit" form="filters"></select>
             </label>
           </div>
-          <button id="next" type="button" class="btn btn-secondary" aria-label="Página siguiente">&rarr;</button>
+          <button id="next" type="button" class="btn btn-secondary" aria-label="Página siguiente">Siguiente</button>
         </div>
       </section>
     </aside>
 
-    <main id="map" aria-label="Mapa de estaciones"></main>
+    <main id="map" aria-label="Mapa"></main>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
