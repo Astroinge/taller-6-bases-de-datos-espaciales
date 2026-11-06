@@ -200,6 +200,34 @@ input:focus, select:focus {
 .per-page { display: flex; align-items: center; gap: 6px; }
 .per-page select { width: auto; padding: 3px 6px; font-size: 12px; }
 
+
+/* ---------- Pestañas de conjuntos de datos ---------- */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab {
+  white-space: nowrap; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: #fff; color: var(--muted);
+  font-weight: 600; cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.tab:hover { background: var(--primary-soft); color: var(--primary-dark); }
+.tab[aria-selected="true"] { background: var(--nav); border-color: var(--nav); color: #fff; }
+
+/* ---------- Filtros dinámicos ---------- */
+.dynamic-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; }
+.dynamic-filters .wide, .dynamic-filters .advanced { grid-column: 1 / -1; }
+.advanced { border: 1px dashed var(--border); border-radius: 8px; padding: 10px 12px; }
+.advanced summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+.advanced[open] summary { margin-bottom: 10px; }
+.advanced .advanced-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+input[type="date"] { width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+input[type="date"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11, 95, 214, 0.15); }
+
+/* ---------- Datos dentro de las tarjetas ---------- */
+.facts { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; }
+.facts div { display: flex; gap: 5px; font-size: 12px; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-weight: 600; }
+.popup-facts { margin-top: 6px; }
+
 /* ---------- Mapa ---------- */
 .station-pin {
   width: 16px; height: 16px; border-radius: 50%;
@@ -208,7 +236,7 @@ input:focus, select:focus {
 .station-pin.express { width: 20px; height: 20px; box-shadow: 0 0 0 2px #101a27, 0 1px 4px rgba(0, 0, 0, 0.45); }
 .leaflet-popup-content-wrapper { border-radius: 10px; }
 .popup-title { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
-.popup-meta { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+.popup-meta { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 860px) {
