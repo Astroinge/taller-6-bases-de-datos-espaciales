@@ -14,6 +14,58 @@ L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 const markersLayer = L.layerGroup().addTo(map);
 
+// Figuras dibujadas por el usuario para filtrar (una a la vez).
+const drawnItems = new L.FeatureGroup().addTo(map);
+let polygonFilter = null; // geometría GeoJSON (Polygon) de un polígono o rectángulo dibujado
+
+map.addControl(
+  new L.Control.Draw({
+    position: "topleft",
+    draw: { polyline: false, marker: false, circlemarker: false, polygon: { allowIntersection: false }, rectangle: {}, circle: {} },
+    edit: { featureGroup: drawnItems },
+  }),
+);
+
+// Traduce la figura dibujada a filtros: círculo -> lat/lon/radio, resto -> polígono GeoJSON.
+function applyShape(layer) {
+  polygonFilter = null;
+  if (layer instanceof L.Circle) {
+    const c = layer.getLatLng();
+    form.lat.value = c.lat.toFixed(6);
+    form.lon.value = c.lng.toFixed(6);
+    form.radius_m.value = Math.min(Math.round(layer.getRadius()), 50000);
+  } else {
+    polygonFilter = layer.toGeoJSON().geometry;
+    form.lat.value = form.lon.value = form.radius_m.value = "";
+  }
+}
+
+function clearShape() {
+  drawnItems.clearLayers();
+  polygonFilter = null;
+}
+
+map.on(L.Draw.Event.CREATED, (e) => {
+  clearShape();
+  drawnItems.addLayer(e.layer);
+  applyShape(e.layer);
+  offset = 0;
+  search();
+});
+map.on(L.Draw.Event.EDITED, (e) => {
+  e.layers.eachLayer(applyShape);
+  offset = 0;
+  search();
+});
+map.on(L.Draw.Event.DELETED, () => {
+  if (drawnItems.getLayers().length === 0) {
+    polygonFilter = null;
+    form.lat.value = form.lon.value = form.radius_m.value = "";
+    offset = 0;
+    search();
+  }
+});
+
 let offset = 0;
 let limit = 50;
 let total = 0;
@@ -30,6 +82,7 @@ function buildQuery() {
     const v = String(value).trim();
     if (v !== "") params.set(key, v);
   }
+  if (polygonFilter) params.set("polygon", JSON.stringify(polygonFilter));
   limit = Number(params.get("limit") || 50);
   params.set("offset", String(offset));
   return params;
@@ -112,6 +165,7 @@ form.addEventListener("submit", (e) => {
 
 document.getElementById("reset").addEventListener("click", () => {
   form.reset();
+  clearShape();
   offset = 0;
   search();
 });
@@ -131,6 +185,7 @@ document.getElementById("use-location").addEventListener("click", () => {
     (pos) => {
       form.lat.value = pos.coords.latitude.toFixed(6);
       form.lon.value = pos.coords.longitude.toFixed(6);
+      clearShape(); // la cercanía por ubicación reemplaza cualquier figura dibujada
       if (!form.radius_m.value) form.radius_m.value = 1000;
       setStatus("Ubicación cargada. Pulsa Buscar.");
     },
