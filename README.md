@@ -27,6 +27,7 @@ Documentación interactiva: http://localhost:8000/docs
 | `route` | Línea que pasa por la estación (ej. `A`, `4`) |
 | `express` | `true` / `false` |
 | `lat`, `lon`, `radius_m` | Estaciones dentro de un radio (m); se envían juntos y ordenan por distancia |
+| `polygon` | Geometría GeoJSON (`Polygon`/`MultiPolygon`, lon/lat) en JSON; devuelve las estaciones dentro de ella |
 | `limit` (1-500, def. 50), `offset` | Paginación |
 
 Ejemplos:
@@ -35,6 +36,8 @@ Ejemplos:
 curl "localhost:8000/api/v1/subway-stations?borough=Brooklyn&express=true"
 curl "localhost:8000/api/v1/subway-stations?lat=40.7580&lon=-73.9855&radius_m=500"
 ```
+
+En el cliente web puedes dibujar un polígono, rectángulo o círculo en el mapa para filtrar por zona.
 
 Respuesta:
 

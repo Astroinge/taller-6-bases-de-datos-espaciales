@@ -17,6 +17,8 @@ button { cursor: pointer; border: 1px solid #9aa5b1; background: #f5f7fa; border
 button[type="submit"] { background: #0b6bcb; color: #fff; border-color: #0b6bcb; }
 button:disabled { opacity: 0.5; cursor: default; }
 
+.hint { grid-column: 1 / -1; margin: 0; font-size: 0.8rem; color: #52606d; }
+
 #status { min-height: 1.4em; font-size: 0.85rem; }
 #status.error { color: #b42318; }
 
